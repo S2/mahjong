@@ -8,11 +8,19 @@ export default class {
         return this.tehai.getTehai()
     }
 
+    tsumo(){
+        this.tehai.tsumo()
+    }
+
+    throw(pi){
+        this.tehai.throw(pi)
+    }
 }
 
 import Yama from "./Yama"
 class Tehai {
     tehai
+    kawa = []
     constructor(private yama : Yama){
         this.tehai = yama.getTehai()
         console.log("-------------------------")
@@ -25,6 +33,15 @@ class Tehai {
 
     getTehai(){
         return this.tehai
+    }
+
+    tsumo(){
+        this.tehai.push(this.yama.tsumo())
+    }
+
+    throw(pi){
+        this.tehai = this.tehai.filter( tehaiPi => tehaiPi !== pi)
+        this.kawa.push(pi)
     }
 
     getKotuCount(){

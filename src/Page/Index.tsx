@@ -14,6 +14,14 @@ interface State {
     player2 
     player3 
     player4 
+    phase : Phases 
+}
+
+enum Phases{
+    player1kiriban , 
+    player2kiriban , 
+    player3kiriban , 
+    player4kiriban , 
 }
 
 class Index extends React.Component<Props , State> {
@@ -27,15 +35,28 @@ class Index extends React.Component<Props , State> {
             player2 : new Player("player2" , yama) , 
             player3 : new Player("player3" , yama) , 
             player4 : new Player("player4" , yama) , 
+            phase : Phases.player1kiriban
         }
     }
-    
+
     render() {
+        if(this.state.phase == Phases.player1kiriban){
+            this.state.player1.tsumo()
+        }
+        if(this.state.phase == Phases.player2kiriban){
+            this.state.player2.tsumo()
+        }
+        if(this.state.phase == Phases.player3kiriban){
+            this.state.player3.tsumo()
+        }
+        if(this.state.phase == Phases.player4kiriban){
+            this.state.player4.tsumo()
+        }
         return <>
-            <PlayerBlock player={this.state.player1} number={1} />
-            <PlayerBlock player={this.state.player2} number={2} />
-            <PlayerBlock player={this.state.player3} number={3} />
-            <PlayerBlock player={this.state.player4} number={4} />
+            <PlayerBlock player={this.state.player1} number={1} setToPhase={()=>{this.setState({phase : Phases.player2kiriban})}} />
+            <PlayerBlock player={this.state.player2} number={2} setToPhase={()=>{this.setState({phase : Phases.player3kiriban})}} />
+            <PlayerBlock player={this.state.player3} number={3} setToPhase={()=>{this.setState({phase : Phases.player4kiriban})}} />
+            <PlayerBlock player={this.state.player4} number={4} setToPhase={()=>{this.setState({phase : Phases.player1kiriban})}} />
         </>
     }
 }
@@ -43,6 +64,7 @@ class Index extends React.Component<Props , State> {
 interface PlayerProps {
     player
     number
+    setToPhase
 }
 
 interface PlayerState {
@@ -53,12 +75,18 @@ class PlayerBlock extends React.Component<PlayerProps , PlayerState> {
         super(props)
         this.state = {
         }
+        this.throw = this.throw.bind(this)
     }
-    
+
+    throw(pi){
+        this.props.player.throw(pi)
+        this.props.setToPhase()
+    }
+
     render() {
         return <div className={`player player${this.props.number}`}>
             {this.props.player.getTehai().sort((arg1 , arg2 ) => arg1.getName() > arg2.getName()).map((pi , i ) => {
-                return <img key={i} src={pi.getImage()} />
+                return <img onClick={()=>{this.throw(pi)}} key={i} src={pi.getImage()} />
             })}
         </div>
     }

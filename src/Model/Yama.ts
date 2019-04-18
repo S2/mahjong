@@ -39,7 +39,7 @@ export default class {
 
     getTehai(){
         const tehai = []
-        for(let i = 0 ; i < 11; i++){
+        for(let i = 0 ; i < 13; i++){
             tehai.push(this.yama.shift())
         }
         return tehai

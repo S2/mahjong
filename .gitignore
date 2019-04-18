@@ -1,3 +1,4 @@
 dist
 *.pl
 node_modules
+*.swp
