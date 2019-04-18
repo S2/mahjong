@@ -187,10 +187,10 @@ class PlayerBlock extends React.Component<PlayerProps , PlayerState> {
             
             {(()=>{
                 if(this.props.ponable){
-                    return <>
+                    return <div className={`buttons buttons${this.props.number}`}>
                         <button onClick={this.props.cancelPonable} className={`pon pon${this.props.number}`}>ポンする</button>
                         <button onClick={this.props.cancelPonable} className={`pon pon${this.props.number}`}>キャンセルする</button>
-                    </>
+                    </div>
                 }
             })()}
         </>
