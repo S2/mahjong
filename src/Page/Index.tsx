@@ -15,6 +15,12 @@ interface State {
     player3 
     player4 
     phase : Phases 
+    throwedPi
+
+    player1ponable
+    player2ponable
+    player3ponable
+    player4ponable
 }
 
 enum Phases{
@@ -22,6 +28,10 @@ enum Phases{
     player2kiriban , 
     player3kiriban , 
     player4kiriban , 
+    player1tsumoban , 
+    player2tsumoban , 
+    player3tsumoban , 
+    player4tsumoban , 
 }
 
 class Index extends React.Component<Props , State> {
@@ -35,7 +45,76 @@ class Index extends React.Component<Props , State> {
             player2 : new Player("player2" , yama) , 
             player3 : new Player("player3" , yama) , 
             player4 : new Player("player4" , yama) , 
-            phase : Phases.player1kiriban
+            phase : Phases.player1kiriban , 
+            throwedPi : null , 
+            player1ponable : null , 
+            player2ponable : null , 
+            player3ponable : null , 
+            player4ponable : null , 
+        }
+        this.claimJadgement = this.claimJadgement.bind(this)
+        this.claimFinishJadgement = this.claimFinishJadgement.bind(this)
+    }
+
+    claimJadgement(){
+        if(
+            this.state.phase == Phases.player1tsumoban || 
+            this.state.phase == Phases.player2tsumoban || 
+            this.state.phase == Phases.player3tsumoban || 
+            this.state.phase == Phases.player4tsumoban){
+            let ponOrChe = false
+            if(
+                this.state.player1.ponable(this.state.throwedPi) || 
+                this.state.player2.ponable(this.state.throwedPi) || 
+                this.state.player3.ponable(this.state.throwedPi) || 
+                this.state.player4.ponable(this.state.throwedPi) 
+            ){
+                this.setState({
+                    player1ponable : this.state.player1.ponable(this.state.throwedPi) , 
+                    player2ponable : this.state.player2.ponable(this.state.throwedPi) , 
+                    player3ponable : this.state.player3.ponable(this.state.throwedPi) , 
+                    player4ponable : this.state.player4.ponable(this.state.throwedPi) , 
+                })
+                ponOrChe = true 
+            }
+            if(!ponOrChe){
+                if(this.state.phase == Phases.player1tsumoban){
+                    this.setState({phase : Phases.player1kiriban})
+                }
+                if(this.state.phase == Phases.player2tsumoban){ 
+                    this.setState({phase : Phases.player2kiriban})
+                }
+                if(this.state.phase == Phases.player3tsumoban){ 
+                    this.setState({phase : Phases.player3kiriban})
+                }
+                if(this.state.phase == Phases.player4tsumoban){
+                    this.setState({phase : Phases.player4kiriban})
+                }
+            }
+        }
+    }
+
+    claimFinishJadgement(){
+        if(
+            this.state.player1ponable || 
+            this.state.player2ponable || 
+            this.state.player3ponable || 
+            this.state.player4ponable 
+        ){
+            return
+        }
+
+        if(this.state.phase == Phases.player1tsumoban){
+            this.setState({phase : Phases.player1kiriban})
+        }
+        if(this.state.phase == Phases.player2tsumoban){ 
+            this.setState({phase : Phases.player2kiriban})
+        }
+        if(this.state.phase == Phases.player3tsumoban){ 
+            this.setState({phase : Phases.player3kiriban})
+        }
+        if(this.state.phase == Phases.player4tsumoban){
+            this.setState({phase : Phases.player4kiriban})
         }
     }
 
@@ -52,11 +131,12 @@ class Index extends React.Component<Props , State> {
         if(this.state.phase == Phases.player4kiriban){
             this.state.player4.tsumo()
         }
+
         return <>
-            <PlayerBlock player={this.state.player1} number={1} isKiriban={this.state.phase == Phases.player1kiriban} setToPhase={()=>{this.setState({phase : Phases.player2kiriban})}} />
-            <PlayerBlock player={this.state.player2} number={2} isKiriban={this.state.phase == Phases.player2kiriban} setToPhase={()=>{this.setState({phase : Phases.player3kiriban})}} />
-            <PlayerBlock player={this.state.player3} number={3} isKiriban={this.state.phase == Phases.player3kiriban} setToPhase={()=>{this.setState({phase : Phases.player4kiriban})}} />
-            <PlayerBlock player={this.state.player4} number={4} isKiriban={this.state.phase == Phases.player4kiriban} setToPhase={()=>{this.setState({phase : Phases.player1kiriban})}} />
+            <PlayerBlock player={this.state.player1} number={1} ponable={this.state.player1ponable} cancelPonable={()=>{this.setState({player1ponable : false} , this.claimFinishJadgement)}} isKiriban={this.state.phase == Phases.player1kiriban} setThrowedPi={(throwedPi)=>{this.setState({throwedPi})}}setToPhase={()=>{this.setState({phase : Phases.player2tsumoban} , this.claimJadgement)}} />
+            <PlayerBlock player={this.state.player2} number={2} ponable={this.state.player2ponable} cancelPonable={()=>{this.setState({player2ponable : false} , this.claimFinishJadgement)}} isKiriban={this.state.phase == Phases.player2kiriban} setThrowedPi={(throwedPi)=>{this.setState({throwedPi})}}setToPhase={()=>{this.setState({phase : Phases.player3tsumoban} , this.claimJadgement)}} />
+            <PlayerBlock player={this.state.player3} number={3} ponable={this.state.player3ponable} cancelPonable={()=>{this.setState({player3ponable : false} , this.claimFinishJadgement)}} isKiriban={this.state.phase == Phases.player3kiriban} setThrowedPi={(throwedPi)=>{this.setState({throwedPi})}}setToPhase={()=>{this.setState({phase : Phases.player4tsumoban} , this.claimJadgement)}} />
+            <PlayerBlock player={this.state.player4} number={4} ponable={this.state.player4ponable} cancelPonable={()=>{this.setState({player4ponable : false} , this.claimFinishJadgement)}} isKiriban={this.state.phase == Phases.player4kiriban} setThrowedPi={(throwedPi)=>{this.setState({throwedPi})}}setToPhase={()=>{this.setState({phase : Phases.player1tsumoban} , this.claimJadgement)}} />
         </>
     }
 }
@@ -66,6 +146,9 @@ interface PlayerProps {
     number
     setToPhase
     isKiriban
+    setThrowedPi
+    ponable
+    cancelPonable
 }
 
 interface PlayerState {
@@ -84,6 +167,7 @@ class PlayerBlock extends React.Component<PlayerProps , PlayerState> {
             return
         }
         this.props.player.throw(pi)
+        this.props.setThrowedPi(pi)
         this.props.setToPhase()
     }
 
@@ -100,6 +184,15 @@ class PlayerBlock extends React.Component<PlayerProps , PlayerState> {
                     return <img onClick={()=>{this.throw(pi)}} key={i} src={pi.getImage()} />
                 })}
             </div>
+            
+            {(()=>{
+                if(this.props.ponable){
+                    return <>
+                        <button onClick={this.props.cancelPonable} className={`pon pon${this.props.number}`}>ポンする</button>
+                        <button onClick={this.props.cancelPonable} className={`pon pon${this.props.number}`}>キャンセルする</button>
+                    </>
+                }
+            })()}
         </>
     }
 }

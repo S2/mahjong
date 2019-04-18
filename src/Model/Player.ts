@@ -4,12 +4,6 @@ export default class {
     kawa = []
     constructor(private name , private yama : Yama){
         this.tehai = this.yama.getTehai()
-        console.log("-------------------------")
-        console.log(this.tehai.map(t => t.getName()).sort())
-        console.log(this.getKotuCount())
-        console.log(this.getToituCount())
-        console.log(this.getShuntuCount())
-        console.log("-------------------------")
     }
 
     getTehai(){
@@ -29,6 +23,12 @@ export default class {
         this.kawa.push(pi)
     }
 
+    ponable(pi){
+        let toitus = this.getToitu()
+        let kotus = this.getKotu()
+        return toitus.filter((toitu)=>toitu.getName() == pi.getName()).length > 0 || kotus.filter((kotu)=>kotu.getName() == pi.getName()).length > 0 
+    }
+
     getKotuCount(){
         let counts = {}
         this.tehai.forEach((pi)=>{
@@ -37,6 +37,18 @@ export default class {
         })
         return Object.keys(counts).filter(pi => counts[pi] == 3).length 
     }
+
+    getKotu(){
+        let counts = {}
+        let pies = {}
+        this.tehai.forEach((pi)=>{
+            counts[pi.getName()] = counts[pi.getName()] || 0
+            counts[pi.getName()]++
+            pies[pi.getName()] = pi
+        })
+        return Object.keys(counts).filter(pi => counts[pi] == 3).map(piName => pies[piName])
+    }
+
     getToituCount(){
         let counts = {}
         this.tehai.forEach((pi)=>{
@@ -45,6 +57,18 @@ export default class {
         })
         return Object.keys(counts).filter(pi => counts[pi] == 2).length 
     }
+
+    getToitu(){
+        let counts = {}
+        let pies = {}
+        this.tehai.forEach((pi)=>{
+            counts[pi.getName()] = counts[pi.getName()] || 0
+            counts[pi.getName()]++
+            pies[pi.getName()] = pi
+        })
+        return Object.keys(counts).filter(pi => counts[pi] == 2).map(piName => pies[piName])
+    }
+
     getShuntuCount(){
         let counts = {}
         let pies = {}
