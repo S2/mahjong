@@ -1,28 +1,9 @@
+import Yama from "./Yama"
 export default class {
     tehai
-    constructor(private name , yama){
-        this.tehai = new Tehai(yama)
-    }
-
-    getTehai(){
-        return this.tehai.getTehai()
-    }
-
-    tsumo(){
-        this.tehai.tsumo()
-    }
-
-    throw(pi){
-        this.tehai.throw(pi)
-    }
-}
-
-import Yama from "./Yama"
-class Tehai {
-    tehai
     kawa = []
-    constructor(private yama : Yama){
-        this.tehai = yama.getTehai()
+    constructor(private name , private yama : Yama){
+        this.tehai = this.yama.getTehai()
         console.log("-------------------------")
         console.log(this.tehai.map(t => t.getName()).sort())
         console.log(this.getKotuCount())
@@ -33,6 +14,10 @@ class Tehai {
 
     getTehai(){
         return this.tehai
+    }
+
+    getKawa(){
+        return this.kawa
     }
 
     tsumo(){

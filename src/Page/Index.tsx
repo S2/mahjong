@@ -53,10 +53,10 @@ class Index extends React.Component<Props , State> {
             this.state.player4.tsumo()
         }
         return <>
-            <PlayerBlock player={this.state.player1} number={1} setToPhase={()=>{this.setState({phase : Phases.player2kiriban})}} />
-            <PlayerBlock player={this.state.player2} number={2} setToPhase={()=>{this.setState({phase : Phases.player3kiriban})}} />
-            <PlayerBlock player={this.state.player3} number={3} setToPhase={()=>{this.setState({phase : Phases.player4kiriban})}} />
-            <PlayerBlock player={this.state.player4} number={4} setToPhase={()=>{this.setState({phase : Phases.player1kiriban})}} />
+            <PlayerBlock player={this.state.player1} number={1} isKiriban={this.state.phase == Phases.player1kiriban} setToPhase={()=>{this.setState({phase : Phases.player2kiriban})}} />
+            <PlayerBlock player={this.state.player2} number={2} isKiriban={this.state.phase == Phases.player2kiriban} setToPhase={()=>{this.setState({phase : Phases.player3kiriban})}} />
+            <PlayerBlock player={this.state.player3} number={3} isKiriban={this.state.phase == Phases.player3kiriban} setToPhase={()=>{this.setState({phase : Phases.player4kiriban})}} />
+            <PlayerBlock player={this.state.player4} number={4} isKiriban={this.state.phase == Phases.player4kiriban} setToPhase={()=>{this.setState({phase : Phases.player1kiriban})}} />
         </>
     }
 }
@@ -65,6 +65,7 @@ interface PlayerProps {
     player
     number
     setToPhase
+    isKiriban
 }
 
 interface PlayerState {
@@ -79,16 +80,27 @@ class PlayerBlock extends React.Component<PlayerProps , PlayerState> {
     }
 
     throw(pi){
+        if(!this.props.isKiriban){
+            return
+        }
         this.props.player.throw(pi)
         this.props.setToPhase()
     }
 
     render() {
-        return <div className={`player player${this.props.number}`}>
-            {this.props.player.getTehai().sort((arg1 , arg2 ) => arg1.getName() > arg2.getName()).map((pi , i ) => {
-                return <img onClick={()=>{this.throw(pi)}} key={i} src={pi.getImage()} />
-            })}
-        </div>
+        return <>
+            <div className={`kawa kawa${this.props.number}`}>
+                {this.props.player.getKawa().map((pi , i ) => {
+                    return <img onClick={()=>{this.throw(pi)}} key={i} src={pi.getImage()} />
+                })}
+            </div>
+
+            <div className={`tehai tehai${this.props.number}`}>
+                {this.props.player.getTehai().sort((arg1 , arg2 ) => arg1.getName() > arg2.getName()).map((pi , i ) => {
+                    return <img onClick={()=>{this.throw(pi)}} key={i} src={pi.getImage()} />
+                })}
+            </div>
+        </>
     }
 }
 
